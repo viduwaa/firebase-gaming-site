@@ -23,9 +23,9 @@ const Games = () => {
           </Routes>
           <div className="absolute bottom-0 w-full bg-secondary text-center text-lg text-yellow-300">
             <h1 className="flex items-center justify-center gap-5">
-              STILL UNDER DEVELOPMENT AND MAY HAVE BUGS, CONTRIBUTE HERE{" "}
+              Still under development, Have Fun !!, Source code: {" "}
               <a href="https://github.com/viduwaa/firebase-gaming-site">
-                <FaGithub />
+                <FaGithub color="red" />
               </a>
             </h1>
           </div>
