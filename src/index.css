@@ -1,4 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: #000;
+    font-family: 'Josefin Sans', sans-serif;
+    color:#fff;
+}
+
+.text-shadow{
+    text-shadow: -1px 3px 6px rgba(0, 0, 0, 0.6);
+}
+
+nav a.active::after{
+    content: url('/assets/isActive.png');
+    position: absolute;
+    top: 0;
+}
+
+table,th,td{
+    border:1px solid #fff;
+    border-collapse: collapse;
+}

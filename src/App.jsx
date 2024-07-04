@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useUserStore } from "./lib/userStore";
-import Login from "./components/login/Login";
+import Login from "./components/auth/Login";
 import Games from "./components/games/Games";
 import { auth } from "./lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import Loader from "./components/loader/Loader";
 
 function App() {
-    const { currentUser, fetchUserInfo } = useUserStore();
+    const { currentUser,isLoading, fetchUserInfo } = useUserStore();
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -22,7 +23,11 @@ function App() {
         }
     },[fetchUserInfo]);
 
-    return currentUser ? <Games /> : <Login />;
+    if (isLoading) {
+        return <Loader/>;
+    }
+
+    return currentUser ? <Games className="m-auto h-dvh w-4/5 border"/> : <Login />;
 }
 
 export default App;
