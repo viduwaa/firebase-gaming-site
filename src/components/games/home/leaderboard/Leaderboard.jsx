@@ -7,7 +7,7 @@ const Leaderboard = () => {
 
   const fetchHighScores = async () => {
     try {
-      const userRef = collection(db, "users");
+      const userRef = collection(db, "highscores");
       const q = query(userRef);
 
       const querySnapshot = await getDocs(q);

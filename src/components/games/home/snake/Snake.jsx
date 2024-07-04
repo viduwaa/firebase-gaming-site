@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import "./Snake.css"
 import AppleLogo from "../../../../assets/applePixels.png"
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import useInterval from "./useInterval"
 import { useUserStore } from "../../../../lib/userStore"
 import { db } from "../../../../lib/firebase";
@@ -52,11 +52,10 @@ function Snake() {
         localStorage.setItem("snakeScore", JSON.stringify(score));
   
         // Reference to the Firestore user document
-        const userRef = doc(db, "users", currentUser.userID);
-  
-        // Update the Firestore document with the new high score
-        await updateDoc(userRef, { highScore: score });
-  
+        await setDoc(doc(db, "highscores", currentUser.userID), {
+			highScore: score,
+			username : currentUser.username
+		});
         console.log("High score updated successfully!");
       }
     } catch (error) {

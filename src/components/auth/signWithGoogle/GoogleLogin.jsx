@@ -23,7 +23,7 @@ const GoogleLogin = () => {
                     email: user.email,
                     photoURL: user.photoURL,
                     userID: user.uid,
-                    highScore: 0,
+                    
                 });
             })
             .catch((error) => {
