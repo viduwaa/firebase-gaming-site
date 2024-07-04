@@ -1,4 +1,4 @@
-# Project Name
+# Simple Firebase gaming site
 
 ## Description
 
