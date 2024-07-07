@@ -1,4 +1,4 @@
-# Simple Firebase gaming site
+# Simple Firebase mini-gaming site
 
 ## Description
 
