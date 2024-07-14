@@ -1,146 +1,258 @@
-import React, { useEffect, useRef, useState } from "react"
-import "./Snake.css"
-import AppleLogo from "../../../../assets/applePixels.png"
+import React, { useEffect, useRef, useState } from "react";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
-import useInterval from "./useInterval"
-import { useUserStore } from "../../../../lib/userStore"
+import { useUserStore } from "../../../../lib/userStore";
 import { db } from "../../../../lib/firebase";
+import './Snake.css'
 
-const canvasX = 1000
-const canvasY = 1000
-const initialSnake = [ [ 4, 10 ], [ 4, 10 ] ]
-const initialApple = [ 14, 10 ]
-const scale = 50
-const timeDelay = 100
-
-function Snake() {
-	const canvasRef = useRef(null)
-	const [ snake, setSnake ] = useState(initialSnake)
-	const [ apple, setApple ] = useState(initialApple)
-	const [ direction, setDirection ] = useState([ 0, -1 ])
-	const [ delay, setDelay ] = useState(null)
-	const [ gameOver, setGameOver ] = useState(false)
-	const [ score, setScore ] = useState(0)
-
+const Board = () => {
   const { currentUser } = useUserStore();
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [highScore, setHighScore] = useState([]);
 
-	useInterval(() => runGame(), delay)
-
-	useEffect(
-		() => {
-			let fruit = document.getElementById("fruit") 
-			if (canvasRef.current) {
-				const canvas = canvasRef.current
-				const ctx = canvas.getContext("2d")
-				if (ctx) {
-					ctx.setTransform(scale, 0, 0, scale, 0, 0)
-					ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
-					ctx.fillStyle = "#a3d001"
-					snake.forEach(([ x, y ]) => ctx.fillRect(x, y, 1, 1))
-					ctx.drawImage(fruit, apple[0], apple[1], 1, 1)
-				}
-			}
-		},
-		[ snake, apple, gameOver ]
-	)
-
-	async function handleSetScore() {
-    try {
-      const currentHighScore = Number(localStorage.getItem("snakeScore"));
-      if (score > currentHighScore) {
-        // Update local storage
-        localStorage.setItem("snakeScore", JSON.stringify(score));
+  const currentHighScore = Number(localStorage.getItem("snakeScore"));
   
-        // Reference to the Firestore user document
-        await setDoc(doc(db, "highscores", currentUser.userID), {
-			highScore: score,
-			username : currentUser.username
-		});
-        console.log("High score updated successfully!");
-      }
+
+  async function handleSetScore() {
+    
+    try {
+      await setDoc(doc(db, "highscores", currentUser.userID), {
+        highScore: score,
+        username: currentUser.username,
+      });
+      console.log("High score updated successfully!");
     } catch (error) {
       console.error("Error updating high score:", error);
     }
   }
 
-	function play() {
-		setSnake(initialSnake)
-		setApple(initialApple)
-		setDirection([ 1, 0 ])
-		setDelay(timeDelay)
-		setScore(0)
-		setGameOver(false)
-	}
+  useEffect(() => {
+    const gameBoard = document.querySelector("#my-tetris");
+    const context = gameBoard.getContext("2d");
+    const scoreText = document.querySelector(".score");
+    const resetBtn = document.querySelector(".reset");
+    const highScore = document.querySelector(".high-score");
+    resetBtn.style.display = "none";
+    const startBtn = document.querySelector(".start");
+    const gameWidth = gameBoard.width;
+    const gameHeight = gameBoard.height;
+    const boardBg = "black";
+    const snakeColor = "aqua";
+    const snakeBorder = "black";
+    const foodColor = "red";
 
-	function checkCollision(head) {
-		for (let i = 0; i < head.length; i++) {
-			if (head[i] < 0 || head[i] * scale >= canvasX) return true
-		}
-		for (const s of snake) {
-			if (head[0] === s[0] && head[1] === s[1]) return true
-		}
-		return false
-	}
+    const unitSize = 20;
+    let running = false;
+    let xVelocity = unitSize;
+    let yVelocity = 0;
 
-	function appleAte(newSnake) {
-		let coord = apple.map(() => Math.floor(Math.random() * canvasX / scale))
-		if (newSnake[0][0] === apple[0] && newSnake[0][1] === apple[1]) {
-			let newApple = coord
-			setScore(score + 1)
-			setApple(newApple)
-			return true
-		}
-		return false
-	}
+    let foodX;
+    let foodY;
 
-	function runGame() {
-		const newSnake = [ ...snake ]
-		const newSnakeHead = [ newSnake[0][0] + direction[0], newSnake[0][1] + direction[1] ]
-		newSnake.unshift(newSnakeHead)
-		if (checkCollision(newSnakeHead)) {
-			setDelay(null)
-			setGameOver(true)
-			handleSetScore()
-		}
-		if (!appleAte(newSnake)) {
-			newSnake.pop()
-		}
-		setSnake(newSnake)
-	}
+    let snake = [
+      { x: unitSize * 2, y: 0 },
+      { x: unitSize, y: 0 },
+      { x: 0, y: 0 },
+    ];
 
-	function changeDirection(e) {
-		switch (e.key) {
-			case "ArrowLeft":
-				setDirection([ -1, 0 ])
-				break
-			case "ArrowUp":
-				setDirection([ 0, -1 ])
-				break
-			case "ArrowRight":
-				setDirection([ 1, 0 ])
-				break
-			case "ArrowDown":
-				setDirection([ 0, 1 ])
-				break
-		}
-	}
+    const clearBoard = () => {
+      context.fillStyle = boardBg;
+      context.fillRect(0, 0, gameWidth, gameHeight);
+    };
 
-	return (
-    <>
+    const createFood = () => {
+      const randomFood = (min, max) => {
+        const randNum =
+          Math.round((Math.random() * (max - min) + min) / unitSize) * unitSize;
+        return randNum;
+      };
+      foodX = randomFood(0, gameWidth - unitSize);
+      foodY = randomFood(0, gameHeight - unitSize);
+    };
 
-		<div onKeyDown={(e) => changeDirection(e)}>
-			<img id="fruit" src={AppleLogo} alt="fruit" width="30" />
-			<canvas className="playArea border border-white" ref={canvasRef} width={`${canvasX}px`} height={`${canvasY}px`} />
-			{gameOver && <div className="gameOver">Game Over</div>}
-			<button onClick={play} className="playButton">
-				Play
-			</button>
-			<div className="scoreBox">
-				<h2>Score: {score}</h2>
-				<h2>High Score: {localStorage.getItem("snakeScore")}</h2>
-			</div>
-		</div></>
-	)
-}
+    const drawFood = () => {
+      context.fillStyle = foodColor;
+      context.fillRect(foodX, foodY, unitSize, unitSize);
+    };
 
-export default Snake
+    const drawSnake = () => {
+      context.fillStyle = snakeColor;
+      context.strokeStyle = snakeBorder;
+      snake.forEach((snakePart) => {
+        context.fillRect(snakePart.x, snakePart.y, unitSize, unitSize);
+        context.strokeRect(snakePart.x, snakePart.y, unitSize, unitSize);
+      });
+    };
+
+    const moveSnake = () => {
+      const head = {
+        x: snake[0].x + xVelocity,
+        y: snake[0].y + yVelocity,
+      };
+      snake.unshift(head);
+
+      if (snake[0].x === foodX && snake[0].y === foodY) {
+        setScore((prev) => prev + 1);
+        createFood();
+      } else {
+        snake.pop();
+      }
+    };
+
+    const changeDirection = (event) => {
+      const keyPressed = event.keyCode;
+      const LEFT = 37;
+      const UP = 38;
+      const RIGHT = 39;
+      const DOWN = 40;
+
+      const goingUp = yVelocity === -unitSize;
+      const goingDown = yVelocity === unitSize;
+      const goingRight = xVelocity === unitSize;
+      const goingLeft = xVelocity === -unitSize;
+
+      switch (true) {
+        case keyPressed === LEFT && !goingRight:
+          xVelocity = -unitSize;
+          yVelocity = 0;
+          break;
+        case keyPressed === UP && !goingDown:
+          xVelocity = 0;
+          yVelocity = -unitSize;
+          break;
+        case keyPressed === RIGHT && !goingLeft:
+          xVelocity = unitSize;
+          yVelocity = 0;
+          break;
+        case keyPressed === DOWN && !goingUp:
+          xVelocity = 0;
+          yVelocity = unitSize;
+          break;
+        default:
+          break;
+      }
+    };
+
+    const checkCollision = () => {
+      switch (true) {
+        case snake[0].x < 0:
+        case snake[0].x >= gameWidth:
+        case snake[0].y < 0:
+        case snake[0].y >= gameHeight:
+          running = false;
+		  
+		  
+          break;
+      }
+      for (let i = 1; i < snake.length; i++) {
+        if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
+          running = false;
+		  
+		  
+        }
+      }
+    };
+
+    const displayGameOver = () => {
+      context.font = "50px Faster One";
+      context.fillStyle = "red";
+      context.textAlign = "center";
+      context.fillText("Game Over", gameWidth / 2, gameHeight / 2);
+      running = false;
+      resetBtn.style.display = "block";
+    };
+	
+    const resetGame = () => {
+      setScore(0);
+      xVelocity = unitSize;
+      yVelocity = 0;
+      snake = [
+        { x: unitSize * 4, y: 0 },
+        { x: unitSize * 3, y: 0 },
+        { x: unitSize * 2, y: 0 },
+        { x: unitSize, y: 0 },
+        { x: 0, y: 0 },
+      ];
+      gamestart();
+    };
+
+    const nextTick = () => {
+      if (running) {
+        setTimeout(() => {
+          clearBoard();
+          drawFood();
+          moveSnake();
+          drawSnake();
+          checkCollision();
+          nextTick();
+        }, 75);
+      } else {
+        displayGameOver();
+        setGameOver(true);
+      }
+    };
+
+    const gamestart = () => {
+      setGameOver(false);
+      running = true;
+      createFood();
+      drawFood();
+      nextTick();
+      startBtn.style.display = "none";
+      resetBtn.style.display = "none";
+    };
+
+    window.addEventListener("keydown", changeDirection);
+    startBtn.addEventListener("click", gamestart);
+    resetBtn.addEventListener("click", resetGame);
+	
+    return () => {
+      window.removeEventListener("keydown", changeDirection);
+      resetBtn.removeEventListener("click", resetGame);
+	  
+    };
+  }, []);
+
+
+  if (score > currentHighScore) {
+    highScore.push(score);
+    localStorage.setItem("snakeScore", JSON.stringify(score));
+  }
+  
+
+  if(gameOver && highScore.pop() == currentHighScore) {
+    console.log("updating high score");
+    handleSetScore()
+
+  }
+
+
+  return (
+    <div className="flex items-center gap-10">
+      <div className="game ml-auto mt-5 flex flex-col gap-5">
+        <canvas id="my-tetris" width="600" height="420"></canvas>
+        <button className="start faster-one-regular m-auto w-fit rounded-xl border bg-purple-600 px-4 text-[3rem] hover:bg-white hover:text-black">
+          Start
+        </button>
+        <button className="reset faster-one-regular m-auto w-fit rounded-xl border bg-purple-600 px-4 text-[2rem] hover:bg-white hover:text-black">
+          Play Again
+        </button>
+      </div>
+
+      <div className="scoreboard mr-auto h-fit w-44 rounded-xl border p-3">
+        <h2 className="text-center text-2xl border-b mb-2">Score Board</h2>
+        <h2  className="text-xl flex justify-between">
+          High Score:{" "}
+          <span className="text-2xl text-green-400 ">
+            {localStorage.getItem("snakeScore")}
+          </span>
+        </h2>
+        <h2 className="text-xl  flex justify-between">
+          Current Score: <span className="text-2xl text-blue-300 ">{score}</span>
+        </h2> 
+      </div>
+    </div>
+  );
+};
+
+export default Board;
