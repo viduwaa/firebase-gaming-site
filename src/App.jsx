@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useUserStore } from "./lib/userStore";
 import Login from "./components/auth/Login";
-import Games from "./components/games/Games";
+import Games from "./components/home/Games";
 import { auth } from "./lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import Loader from "./components/loader/Loader";

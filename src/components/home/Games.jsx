@@ -1,13 +1,14 @@
 import React from "react";
 import Logout from "../auth/Logout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./home/Home";
-import NoPage from "./home/noPage/NoPage";
-import Snake from "./home/snake/Snake";
+import Home from "./games/Home";
+import NoPage from "./games/noPage/NoPage";
+import Snake from "./games/snake/Snake";
 import Navigation from "./navigation/Navigation";
 import Login from "../auth/Login";
-import Leaderboard from "./home/leaderboard/Leaderboard";
+import Leaderboard from "./games/leaderboard/Leaderboard";
 import { FaGithub } from "react-icons/fa";
+import Tetris from "./games/tetris/Tetris";
 
 const Games = () => {
   return (
@@ -18,6 +19,7 @@ const Games = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/snake" element={<Snake />} />
+            <Route path="/tetris" element={<Tetris />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="*" element={<NoPage />} />
           </Routes>
