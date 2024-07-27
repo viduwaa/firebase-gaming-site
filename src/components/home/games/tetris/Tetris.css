@@ -1,14 +1,101 @@
-.display {
-    display: flex;
-    justify-content: space-between;
-    width: 380px;
+.tetris {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  width: 100%;
+  h1{
+    flex: 1;
   }
+}
 
-.stage{
-  display: grid;
-  grid-template-columns: repeat(12, 30px);
-  grid-template-rows: repeat(20, 30px);
-  grid-gap: 1px;
-  border: 1px solid #777;
-  background: #222;
+
+button {
+  padding: 4px;
+}
+
+.boardwrapper{
+  width: 100%;
+  flex: 3;
+}
+
+.board {
+
+  border: 5px solid #40a2d8;
+  user-select: none;
+  margin-left: auto;
+  background: #fff;
+  width: 310px;
+}
+
+.controls {
+  flex: 2;
+  position: relative;
+}
+
+.row {
+  display: flex;
+}
+
+.upcoming {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cell {
+  width: 30px;
+  aspect-ratio: 1;
+  border: 1px solid rgba(70, 65, 65, 0.247);
+}
+
+.cell.hidden {
+  visibility: hidden;
+}
+
+.cell.Empty {
+  background-color: #ffffff;
+}
+
+.cell.I {
+  background-color: #39d698;
+  border-radius: 5px;
+  border: 1px solid rgb(70, 65, 65);
+
+}
+
+.cell.J {
+  background-color: #f7e04b;
+  border-radius: 5px;
+    border: 1px double rgb(70, 65, 65);
+}
+
+.cell.L {
+  background-color: #f76c6c;
+  border-radius: 5px;
+    border: 1px double rgb(70, 65, 65);
+}
+
+.cell.O {
+  background-color: #ff6f00;
+  border-radius: 5px;
+    border: 1px double rgb(70, 65, 65);
+}
+
+.cell.S {
+  background-color: #9b5bff;
+  border-radius: 5px;
+    border: 1px double rgb(70, 65, 65);
+}
+
+.cell.T {
+  background-color: #c4e300;
+  border-radius: 5px;
+    border: 1px double rgb(70, 65, 65);
+}
+
+.cell.Z {
+  background-color: #00b8d4;
+  border-radius: 5px;
+    border: 1px double rgb(70, 65, 65);
 }
