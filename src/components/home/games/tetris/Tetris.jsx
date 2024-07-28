@@ -21,7 +21,7 @@ const Tetris = () => {
         <div className="controls">
           <div className="scores vt323-regular p-3 text-[1.5rem]">
             <h2>Score: {score}</h2>
-            <h2>High Score : {localStorage.getItem("tetrisScore")}</h2>
+            <h2>High Score : {Number(localStorage.getItem("tetrisScore"))}</h2>
           </div>
 
           {isPlaying ? (

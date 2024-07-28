@@ -8,6 +8,10 @@ import {
   getEmptyBoard,
   getRandomBlock,
 } from './useTetrisBoard';
+import { useUserStore } from '../../../../../lib/userStore';
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { db } from '../../../../../lib/firebase';
+
 
 const TickSpeed ={
   Normal : 300,
@@ -16,14 +20,13 @@ const TickSpeed ={
 }
 
 export function useTetris() {
+  const { currentUser } = useUserStore();
   const [score, setScore] = useState(0);
-  const [highScore, setHighScore] = useState(0);
+  const [highScore, setHighScore] = useState(Number(localStorage.getItem("tetrisScore")));
   const [upcomingBlocks, setUpcomingBlocks] = useState([]);
   const [isCommitting, setIsCommitting] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [tickSpeed, setTickSpeed] = useState(null);
-
-
 
   const [
     { board, droppingRow, droppingColumn, droppingBlock, droppingShape },
@@ -74,12 +77,30 @@ export function useTetris() {
     newUpcomingBlocks.unshift(getRandomBlock());
 
     if (hasCollisions(board, SHAPES[newBlock].shape, 0, 3)) {
-      if (score > highScore) {
-        setHighScore(score);
-        localStorage.setItem("tetrisScore", JSON.stringify(highScore));
-      }
       setIsPlaying(false);
       setTickSpeed(null);
+      console.log(score)
+      if (score > highScore) {
+        setHighScore(score);
+        localStorage.setItem("tetrisScore", score);
+        async function handleUpdateScore() {
+          try {
+            // Reference to the document you want to update
+            const docRef = doc(db, "highscores", currentUser.userID);
+        
+            // Update the document with the new fields
+            await updateDoc(docRef, {
+              tetrisHighScore: score,
+              username: currentUser.username,
+            });
+        
+            console.log("High score updated successfully!");
+          } catch (error) {
+            console.error("Error updating high score:", error);
+          }
+        }
+        handleUpdateScore();
+      }
     } else {
       setTickSpeed(TickSpeed.Normal);
     }
@@ -199,7 +220,6 @@ export function useTetris() {
 
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
-    setHighScore(localStorage.setItem("tetrisScore",highScore)|| 0);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keyup', handleKeyUp);
@@ -234,13 +254,13 @@ function getPoints(numCleared) {
     case 0:
       return 0;
     case 1:
-      return 1;
+      return 10;
     case 2:
-      return 2;
+      return 6;
     case 3:
-      return 3;
+      return 9;
     case 4:
-      return 4;
+      return 12;
     default:
       throw new Error('Unexpected number of rows cleared');
   }
