@@ -4,7 +4,7 @@ import { useLeaderboard } from "../useLeaderboard";
 const TetrisLB = () => {
   const { sortedTetris } = useLeaderboard();
   return (
-    <div className="mt-3 pb-20 w-1/2">
+    <div className="mt-3 w-1/2">
       <h1 className="text-2xl font-bold">Tetris Leaderboard - Top 10</h1>
       <table className="w-full text-center">
         <thead>

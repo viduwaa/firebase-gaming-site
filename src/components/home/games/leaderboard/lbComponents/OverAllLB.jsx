@@ -4,7 +4,6 @@ import { useLeaderboard } from "../useLeaderboard";
 const OverAllLB = () => {
   const { sortedTop5 } = useLeaderboard();
 
-
   // Check if sortedTop5 has enough data
   const hasTop5 = sortedTop5.length >= 5;
 
@@ -18,18 +17,28 @@ const OverAllLB = () => {
           <>
             <div className="flex justify-center gap-3 border-b-2 p-3">
               <div>
-                <img src={sortedTop5[0].avatar} alt="avatar" className="h-14 w-14 border" />
+                <img
+                  src={sortedTop5[0].avatar}
+                  alt="avatar"
+                  className="h-14 w-14 rounded-full border-none outline-none"
+                />
                 <h1 className="mt-1 text-center">Rank 1</h1>
               </div>
               <div>
                 <p className="text-xl">{sortedTop5[0].userName}</p>
-                <p className="text-xl">High Score : {sortedTop5[0].totalScore}</p>
+                <p className="text-xl">
+                  High Score : {sortedTop5[0].totalScore}
+                </p>
               </div>
             </div>
             <div className="flex flex-wrap">
               <div className="flex flex-1 justify-center gap-3 border-r-2 p-3">
                 <div>
-                  <img src={sortedTop5[1].avatar} alt="avatar" className="h-14 w-14 border" />
+                  <img
+                    src={sortedTop5[1].avatar}
+                    alt="avatar"
+                    className="h-14 w-14 rounded-full border border-none outline-none"
+                  />
                   <h1 className="mt-1 text-center">Rank 2</h1>
                 </div>
                 <div>
@@ -39,7 +48,11 @@ const OverAllLB = () => {
               </div>
               <div className="flex flex-1 justify-center gap-3 p-3">
                 <div>
-                  <img src={sortedTop5[2].avatar} alt="avatar" className="h-14 w-14 border" />
+                  <img
+                    src={sortedTop5[2].avatar}
+                    alt="avatar"
+                    className="h-14 w-14 rounded-full border border-none outline-none"
+                  />
                   <h1 className="mt-1 text-center">Rank 3</h1>
                 </div>
                 <div>
@@ -52,20 +65,28 @@ const OverAllLB = () => {
               <tbody>
                 <tr>
                   <td className="w-[33%] p-1 text-center">Rank 4</td>
-                  <td className="w-[33%] p-1 text-center">{sortedTop5[3].userName}</td>
-                  <td className="w-[33%] p-1 text-center">{sortedTop5[3].totalScore}</td>
+                  <td className="w-[33%] p-1 text-center">
+                    {sortedTop5[3].userName}
+                  </td>
+                  <td className="w-[33%] p-1 text-center">
+                    {sortedTop5[3].totalScore}
+                  </td>
                 </tr>
                 <tr>
                   <td className="w-[33%] p-1 text-center">Rank 5</td>
-                  <td className="w-[33%] p-1 text-center">{sortedTop5[4].userName}</td>
-                  <td className="w-[33%] p-1 text-center">{sortedTop5[4].totalScore}</td>
+                  <td className="w-[33%] p-1 text-center">
+                    {sortedTop5[4].userName}
+                  </td>
+                  <td className="w-[33%] p-1 text-center">
+                    {sortedTop5[4].totalScore}
+                  </td>
                 </tr>
               </tbody>
             </table>
           </>
         )}
         {!hasTop5 && (
-          <p className="text-center mt-4">No leaderboard data available.</p>
+          <p className="mt-4 text-center">No leaderboard data available.</p>
         )}
       </div>
     </>

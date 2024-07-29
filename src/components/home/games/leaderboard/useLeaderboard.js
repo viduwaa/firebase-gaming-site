@@ -19,13 +19,25 @@ export const useLeaderboard = () => {
 
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        const snakeHighScore = data.highScore;
+        const avatar = data.photoURL;
+        const snakeHighScore = data.highScore || 0;
         const tetrisHighScore = data.tetrisHighScore || 0;
         const totalScore = snakeHighScore + tetrisHighScore;
         const userName = doc.data().username;
-        tetrisHighScoreArray.push({ userName, tetrisHighScore });
-        snakeHighScoreArray.push({ userName, snakeHighScore });
-        top5.push({ userName, totalScore,avatar });
+        
+        if (tetrisHighScore !== 0) {
+          tetrisHighScoreArray.push({ userName, tetrisHighScore });
+        }
+
+        if (snakeHighScore !== 0) {
+          snakeHighScoreArray.push({ userName, snakeHighScore });
+        }
+
+        if (totalScore !== 0) {
+          top5.push({ userName, totalScore, avatar });
+        }
+        
+        
       });
 
       const sortedTop5 = top5

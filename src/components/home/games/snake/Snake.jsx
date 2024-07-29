@@ -19,7 +19,7 @@ const Board = () => {
       await setDoc(doc(db, "highscores", currentUser.userID), {
         highScore: score,
         username: currentUser.username,
-      });
+      }, { merge: true });
       console.log("High score updated successfully!");
     } catch (error) {
       console.error("Error updating high score:", error);

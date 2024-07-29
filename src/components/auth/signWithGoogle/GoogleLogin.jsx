@@ -22,9 +22,12 @@ const GoogleLogin = () => {
                     username: user.displayName,
                     email: user.email,
                     photoURL: user.photoURL,
-                    userID: user.uid,
-                    
+                    userID: user.uid,    
                 });
+
+                await setDoc(doc(db, "highscores", currentUser.userID), {
+                    photoURL: user.photoURL,
+                  }, { merge: true });
             })
             .catch((error) => {
                 const errorCode = error.code;

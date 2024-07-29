@@ -18,7 +18,7 @@ const Leaderboard = () => {
         <>
           {" "}
           <OverAllLB />
-          <div className="mt-5 flex gap-10">
+          <div className="mt-5 flex gap-10 pb-20">
             <SnakeLB />
             <TetrisLB />
           </div>

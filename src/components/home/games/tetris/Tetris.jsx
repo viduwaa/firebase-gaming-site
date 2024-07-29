@@ -22,6 +22,12 @@ const Tetris = () => {
           <div className="scores vt323-regular p-3 text-[1.5rem]">
             <h2>Score: {score}</h2>
             <h2>High Score : {Number(localStorage.getItem("tetrisScore"))}</h2>
+            <ul>
+              <li className="text-base">1 line = 6 pts</li>
+              <li className="text-base">2 line = 10 pts</li>
+              <li className="text-base">3 line = 15 pts</li>
+              <li className="text-base">4 line = 20 pts</li>
+            </ul>
           </div>
 
           {isPlaying ? (

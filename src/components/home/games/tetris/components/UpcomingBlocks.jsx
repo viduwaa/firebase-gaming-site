@@ -3,6 +3,8 @@ import { SHAPES } from '../types';
 
 function UpcomingBlocks({ upcomingBlocks }) {
   return (
+    <>
+    <h2>Up Coming Blocks</h2>
     <div className="upcoming">
       {upcomingBlocks.map((block, blockIndex) => {
         const shape = SHAPES[block].shape.filter((row) =>
@@ -28,7 +30,7 @@ function UpcomingBlocks({ upcomingBlocks }) {
           </div>
         );
       })}
-    </div>
+    </div></>
   );
 }
 

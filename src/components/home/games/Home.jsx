@@ -17,7 +17,7 @@ const Home = () => {
           style={{ backgroundImage: `url(${game.photo})` }}
           className={`header flex h-full w-full items-center justify-center bg-cover`}
         ></div>
-        <Link to={"/snake"} className="text-shadow absolute flex w-32 items-center justify-center rounded-md border bg-[#7bc8ff65] p-4 backdrop-blur-sm hover:bg-[#7bc8fff6] hover:backdrop:blur-none">
+        <Link to={game.path} className="text-shadow absolute flex w-32 items-center justify-center rounded-md border bg-[#7bc8ff65] p-4 backdrop-blur-sm hover:bg-[#7bc8fff6] hover:backdrop:blur-none">
           <button>PLAY</button>
         </Link>
         <div className="body h-32">

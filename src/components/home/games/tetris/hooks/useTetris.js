@@ -15,6 +15,7 @@ import { db } from '../../../../../lib/firebase';
 
 const TickSpeed ={
   Normal : 300,
+  Medium :200,
   Sliding : 100,
   Fast : 50,
 }
@@ -39,7 +40,6 @@ export function useTetris() {
       getRandomBlock(),
       getRandomBlock(),
     ];
-    console.log(highScore)
     setScore(0);
     setUpcomingBlocks(startingBlocks);
     setIsCommitting(false);
@@ -79,7 +79,6 @@ export function useTetris() {
     if (hasCollisions(board, SHAPES[newBlock].shape, 0, 3)) {
       setIsPlaying(false);
       setTickSpeed(null);
-      console.log(score)
       if (score > highScore) {
         setHighScore(score);
         localStorage.setItem("tetrisScore", score);
@@ -91,7 +90,6 @@ export function useTetris() {
             // Update the document with the new fields
             await updateDoc(docRef, {
               tetrisHighScore: score,
-              username: currentUser.username,
             });
         
             console.log("High score updated successfully!");
@@ -106,6 +104,15 @@ export function useTetris() {
     }
     setUpcomingBlocks(newUpcomingBlocks);
     setScore((prevScore) => prevScore + getPoints(numCleared));
+    if(score < 59){
+      setTickSpeed(TickSpeed.Normal)
+    }else if(score < 100){
+      setTickSpeed(TickSpeed.Medium)
+    }else{
+      setTickSpeed(TickSpeed.Sliding)
+    }
+    console.log(score)
+    console.log(tickSpeed)
     dispatchBoardState({
       type: 'commit',
       newBoard: [...getEmptyBoard(BOARD_HEIGHT - newBoard.length), ...newBoard],
@@ -254,13 +261,13 @@ function getPoints(numCleared) {
     case 0:
       return 0;
     case 1:
-      return 10;
-    case 2:
       return 6;
+    case 2:
+      return 10;
     case 3:
-      return 9;
+      return 15;
     case 4:
-      return 12;
+      return 20;
     default:
       throw new Error('Unexpected number of rows cleared');
   }

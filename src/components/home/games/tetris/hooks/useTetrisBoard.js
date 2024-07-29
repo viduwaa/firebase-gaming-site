@@ -2,7 +2,7 @@ import { useReducer, Dispatch } from 'react';
 import { Block, EmptyCell, SHAPES } from '../types';
 
 export const BOARD_WIDTH = 10;
-export const BOARD_HEIGHT = 15;
+export const BOARD_HEIGHT = 16;
 
 
 export function useTetrisBoard() {
