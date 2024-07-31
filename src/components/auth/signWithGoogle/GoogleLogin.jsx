@@ -25,7 +25,7 @@ const GoogleLogin = () => {
                     userID: user.uid,    
                 });
 
-                await setDoc(doc(db, "highscores", currentUser.userID), {
+                await setDoc(doc(db, "highscores", user.uid), {
                     photoURL: user.photoURL,
                   }, { merge: true });
             })

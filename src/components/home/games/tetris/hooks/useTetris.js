@@ -111,8 +111,6 @@ export function useTetris() {
     }else{
       setTickSpeed(TickSpeed.Sliding)
     }
-    console.log(score)
-    console.log(tickSpeed)
     dispatchBoardState({
       type: 'commit',
       newBoard: [...getEmptyBoard(BOARD_HEIGHT - newBoard.length), ...newBoard],
