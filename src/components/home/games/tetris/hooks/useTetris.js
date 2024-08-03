@@ -23,7 +23,7 @@ const TickSpeed ={
 export function useTetris() {
   const { currentUser } = useUserStore();
   const [score, setScore] = useState(0);
-  const [highScore, setHighScore] = useState(Number(localStorage.getItem("tetrisScore")));
+  const [highScore, setHighScore] = useState(0);
   const [upcomingBlocks, setUpcomingBlocks] = useState([]);
   const [isCommitting, setIsCommitting] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -39,7 +39,7 @@ export function useTetris() {
     const docSnap = await getDoc(docRef);
 
     if(docSnap.exists()){
-      setHighScore(docSnap.data().tetrisHighScore);
+      docSnap.data().tetrisHighScore == undefined ? setHighScore(0) : setHighScore(docSnap.data().tetrisHighScore);
     }else{
       setHighScore(0);
     }
@@ -92,6 +92,7 @@ export function useTetris() {
     if (hasCollisions(board, SHAPES[newBlock].shape, 0, 3)) {
       setIsPlaying(false);
       setTickSpeed(null);
+
       if (score > highScore) {
         setHighScore(score);
         async function handleUpdateScore() {
