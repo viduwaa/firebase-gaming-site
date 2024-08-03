@@ -40,12 +40,13 @@ export function useTetris() {
 
     if(docSnap.exists()){
       docSnap.data().tetrisHighScore == undefined ? setHighScore(0) : setHighScore(docSnap.data().tetrisHighScore);
+      console.log("fecthed")
     }else{
       setHighScore(0);
     }
   }
 
-  getHighScore()
+  
 
   const startGame = useCallback(() => {
     const startingBlocks = [
@@ -169,6 +170,7 @@ export function useTetris() {
   }, tickSpeed);
 
   useEffect(() => {
+    getHighScore()
     if (!isPlaying) {
       return;
     }
@@ -242,7 +244,7 @@ export function useTetris() {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keyup', handleKeyUp);
       clearInterval(moveIntervalID);
-      setTickSpeed(TickSpeed.Normal);
+      setTickSpeed(TickSpeed.Normal);    
     };
   }, [dispatchBoardState, isPlaying]);
 
