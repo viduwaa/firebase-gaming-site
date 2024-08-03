@@ -32,17 +32,19 @@ const Board = () => {
 
     if(docSnap.exists()){
       setHighScore(docSnap.data().highScore);
+      console.log('fecthed')
     }else{
       setHighScore(0);
     }
   }
 
-  getHighScore()
+ 
 
   
   
 
   useEffect(() => {
+    getHighScore()
     const gameBoard = document.querySelector("#my-tetris");
     const context = gameBoard.getContext("2d");
     const scoreText = document.querySelector(".score");
@@ -230,7 +232,8 @@ const Board = () => {
     };
   }, []);
 
-  if(gameOver && highScore < score) {
+
+  if(gameOver && highScore == score) {
     console.log("updating high score");
     handleSetScore()
   }

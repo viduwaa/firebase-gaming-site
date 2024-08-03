@@ -40,7 +40,6 @@ export function useTetris() {
 
     if(docSnap.exists()){
       docSnap.data().tetrisHighScore == undefined ? setHighScore(0) : setHighScore(docSnap.data().tetrisHighScore);
-      console.log("fecthed")
     }else{
       setHighScore(0);
     }
