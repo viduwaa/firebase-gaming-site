@@ -19,12 +19,11 @@ button {
 }
 
 .board {
-
   border: 5px solid #40a2d8;
   user-select: none;
   margin-left: auto;
   background: #fff;
-  width: 310px;
+  width: 260px;
 }
 
 .controls {
@@ -44,7 +43,7 @@ button {
 }
 
 .cell {
-  width: 30px;
+  width: 25px;
   aspect-ratio: 1;
   border: 1px solid rgba(70, 65, 65, 0.247);
 }

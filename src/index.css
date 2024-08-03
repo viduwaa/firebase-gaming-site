@@ -21,10 +21,8 @@ body {
   text-shadow: -1px 3px 6px rgba(0, 0, 0, 0.6);
 }
 
-nav a.active::after {
-  content: url("/assets/isActive.png");
-  position: absolute;
-  top: 0;
+nav li a.active{
+    background:#0B60B0;
 }
 
 table,

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useUserStore } from "../../../../lib/userStore";
 import { db } from "../../../../lib/firebase";
 import './Snake.css'
@@ -8,9 +8,9 @@ const Board = () => {
   const { currentUser } = useUserStore();
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
-  const [highScore, setHighScore] = useState([]);
+  const [highScore, setHighScore] = useState(0);
 
-  const currentHighScore = Number(localStorage.getItem("snakeScore"));
+  /* const currentHighScore = Number(localStorage.getItem("snakeScore")); */
   
 
   async function handleSetScore() {
@@ -25,6 +25,22 @@ const Board = () => {
       console.error("Error updating high score:", error);
     }
   }
+
+  async function getHighScore() {
+    const docRef = doc(db,"highscores", currentUser.userID);
+    const docSnap = await getDoc(docRef);
+
+    if(docSnap.exists()){
+      setHighScore(docSnap.data().highScore);
+    }else{
+      setHighScore(0);
+    }
+  }
+
+  getHighScore()
+
+  
+  
 
   useEffect(() => {
     const gameBoard = document.querySelector("#my-tetris");
@@ -205,6 +221,7 @@ const Board = () => {
     window.addEventListener("keydown", changeDirection);
     startBtn.addEventListener("click", gamestart);
     resetBtn.addEventListener("click", resetGame);
+    
 	
     return () => {
       window.removeEventListener("keydown", changeDirection);
@@ -213,18 +230,18 @@ const Board = () => {
     };
   }, []);
 
+  if(gameOver && highScore < score) {
+    console.log("updating high score");
+    handleSetScore()
+  }
 
-  if (score > currentHighScore) {
-    highScore.push(score);
-    localStorage.setItem("snakeScore", JSON.stringify(score));
+  if (score > highScore) {
+    setHighScore(score);
+    /* localStorage.setItem("snakeScore", JSON.stringify(score)); */
   }
   
 
-  if(gameOver && highScore.pop() == currentHighScore) {
-    console.log("updating high score");
-    handleSetScore()
-
-  }
+  
 
 
   return (
@@ -244,7 +261,7 @@ const Board = () => {
         <h2  className="text-xl flex justify-between">
           High Score:{" "}
           <span className="text-2xl text-green-400 ">
-            {localStorage.getItem("snakeScore")}
+            {highScore}
           </span>
         </h2>
         <h2 className="text-xl  flex justify-between">

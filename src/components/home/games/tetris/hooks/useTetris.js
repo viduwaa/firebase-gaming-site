@@ -9,14 +9,14 @@ import {
   getRandomBlock,
 } from './useTetrisBoard';
 import { useUserStore } from '../../../../../lib/userStore';
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from '../../../../../lib/firebase';
 
 
 const TickSpeed ={
   Normal : 300,
   Medium :200,
-  Sliding : 100,
+  Sliding : 150,
   Fast : 50,
 }
 
@@ -33,6 +33,19 @@ export function useTetris() {
     { board, droppingRow, droppingColumn, droppingBlock, droppingShape },
     dispatchBoardState,
   ] = useTetrisBoard();
+
+  async function getHighScore() {
+    const docRef = doc(db,"highscores", currentUser.userID);
+    const docSnap = await getDoc(docRef);
+
+    if(docSnap.exists()){
+      setHighScore(docSnap.data().tetrisHighScore);
+    }else{
+      setHighScore(0);
+    }
+  }
+
+  getHighScore()
 
   const startGame = useCallback(() => {
     const startingBlocks = [
@@ -81,7 +94,6 @@ export function useTetris() {
       setTickSpeed(null);
       if (score > highScore) {
         setHighScore(score);
-        localStorage.setItem("tetrisScore", score);
         async function handleUpdateScore() {
           try {
             // Reference to the document you want to update
