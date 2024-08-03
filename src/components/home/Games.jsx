@@ -24,12 +24,18 @@ const Games = () => {
             <Route path="*" element={<NoPage />} />
           </Routes>
         </div>
-        <div className="absolute bottom-0 w-full bg-secondary text-center text-lg text-yellow-300 ">
+        <div className="absolute bottom-0 w-full bg-secondary text-center text-lg text-yellow-300">
           <h1 className="flex items-center justify-center gap-5">
             Still under development, Have Fun !!, Source code:{" "}
             <a href="https://github.com/viduwaa/firebase-gaming-site">
               <FaGithub color="red" />
             </a>
+          </h1>
+        </div>
+        <div className="md:hidden fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform bg-blue-500 p-2 text-[2rem] rounded-lg border-[10px] font-bold border-red-500">
+          <h1 className="text-center">
+            Still not optimize for handheld devices 🫥. <br />
+            Please use a Laptop or a PC for better experience
           </h1>
         </div>
       </BrowserRouter>
