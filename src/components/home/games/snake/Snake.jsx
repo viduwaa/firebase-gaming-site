@@ -8,19 +8,23 @@ const Board = () => {
   const { currentUser } = useUserStore();
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
-  const [highScore, setHighScore] = useState(0);
+  const [dbScore, setHighScore] = useState(0);
 
   /* const currentHighScore = Number(localStorage.getItem("snakeScore")); */
   
 
   async function handleSetScore() {
-    
     try {
-      await setDoc(doc(db, "highscores", currentUser.userID), {
-        highScore: score,
+      // Reference to the document you want to update
+      const docRef = doc(db, "highscores", currentUser.userID);
+  
+      // Update the document with the new fields
+      await updateDoc(docRef, {
+        highscore: score,
         username: currentUser.username,
-      }, { merge: true });
-      console.log("High score updated successfully!");
+      },{merge:true});
+  
+      //console.log("High score updated successfully!");
     } catch (error) {
       console.error("Error updating high score:", error);
     }
@@ -31,8 +35,8 @@ const Board = () => {
     const docSnap = await getDoc(docRef);
 
     if(docSnap.exists()){
-      setHighScore(docSnap.data().highScore);
-      console.log('fecthed')
+      setHighScore(docSnap.data().dbScore == undefined ? 0 : docSnap.data().dbScore);
+      //console.log('fecthed')
     }else{
       setHighScore(0);
     }
@@ -233,12 +237,12 @@ const Board = () => {
   }, []);
 
 
-  if(gameOver && highScore == score) {
+  if(gameOver && dbScore == score) {
     console.log("updating high score");
     handleSetScore()
   }
 
-  if (score > highScore) {
+  if (score > dbScore) {
     setHighScore(score);
     /* localStorage.setItem("snakeScore", JSON.stringify(score)); */
   }
@@ -264,7 +268,7 @@ const Board = () => {
         <h2  className="text-xl flex justify-between">
           High Score:{" "}
           <span className="text-2xl text-green-400 ">
-            {highScore}
+            {dbScore}
           </span>
         </h2>
         <h2 className="text-xl  flex justify-between">

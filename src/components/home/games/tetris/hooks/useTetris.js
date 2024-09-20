@@ -103,9 +103,10 @@ export function useTetris() {
             // Update the document with the new fields
             await updateDoc(docRef, {
               tetrisHighScore: score,
-            });
+              username: currentUser.username,
+            },{merge:true});
         
-            console.log("High score updated successfully!");
+            //console.log("High score updated successfully!");
           } catch (error) {
             console.error("Error updating high score:", error);
           }
